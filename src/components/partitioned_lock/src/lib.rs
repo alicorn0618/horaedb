@@ -49,16 +49,16 @@ where
         PartitionedRwLock::try_new(init_fn, partition_num, hash_builder)
     }
 
-    /// New cache with capacity round to `suggest_cap`'s power of 2
-    pub fn try_new_with_suggest_cap<F, E>(
+    /// New cache with capacity round to `suggest_num`'s power of 2
+    pub fn try_new_with_suggest_num<F, E>(
         init_fn: F,
-        suggest_cap: usize,
+        suggest_num: usize,
         hash_builder: B,
     ) -> Result<Self, E>
     where
         F: Fn(usize) -> Result<T, E>,
     {
-        let partition_num = suggest_cap.next_power_of_two();
+        let partition_num = suggest_num.next_power_of_two();
         PartitionedRwLock::try_new(init_fn, partition_num, hash_builder)
     }
 
@@ -128,16 +128,16 @@ where
         PartitionedMutex::try_new(init_fn, partition_num, hash_builder)
     }
 
-    /// New cache with capacity round to `suggest_cap`'s power of 2
-    pub fn try_new_with_suggest_cap<F, E>(
+    /// New cache with capacity round to `suggest_num`'s power of 2
+    pub fn try_new_with_suggest_num<F, E>(
         init_fn: F,
-        suggest_cap: usize,
+        suggest_num: usize,
         hash_builder: B,
     ) -> Result<Self, E>
     where
         F: Fn(usize) -> Result<T, E>,
     {
-        let partition_num = suggest_cap.next_power_of_two();
+        let partition_num = suggest_num.next_power_of_two();
         PartitionedMutex::try_new(init_fn, partition_num, hash_builder)
     }
 
@@ -205,16 +205,16 @@ where
         PartitionedMutexAsync::try_new(init_fn, partition_num, hash_builder)
     }
 
-    /// New cache with capacity round to `suggest_cap`'s power of 2
-    pub fn try_new_with_suggest_cap<F, E>(
+    /// New cache with capacity round to `suggest_num`'s power of 2
+    pub fn try_new_with_suggest_num<F, E>(
         init_fn: F,
-        suggest_cap: usize,
+        suggest_num: usize,
         hash_builder: B,
     ) -> Result<Self, E>
     where
         F: Fn(usize) -> Result<T, E>,
     {
-        let partition_num = suggest_cap.next_power_of_two();
+        let partition_num = suggest_num.next_power_of_two();
         PartitionedMutexAsync::try_new(init_fn, partition_num, hash_builder)
     }
 
@@ -266,7 +266,7 @@ mod tests {
         let test_rwlock_42_bit_len =
             PartitionedRwLock::try_new_with_bit_len(init_42, 4, build_fixed_seed_ahasher_builder())
                 .unwrap();
-        let test_rwlock_42_suggest_cap = PartitionedRwLock::try_new_with_suggest_cap(
+        let test_rwlock_42_suggest_num = PartitionedRwLock::try_new_with_suggest_num(
             init_42,
             13,
             build_fixed_seed_ahasher_builder(),
@@ -276,7 +276,7 @@ mod tests {
         let test_mutex_42_bit_len =
             PartitionedMutex::try_new_with_bit_len(init_42, 4, build_fixed_seed_ahasher_builder())
                 .unwrap();
-        let test_mutex_42_suggest_cap = PartitionedMutex::try_new_with_suggest_cap(
+        let test_mutex_42_suggest_num = PartitionedMutex::try_new_with_suggest_num(
             init_42,
             16,
             build_fixed_seed_ahasher_builder(),
@@ -289,7 +289,7 @@ mod tests {
             build_fixed_seed_ahasher_builder(),
         )
         .unwrap();
-        let test_mutex_async_42_suggest_cap = PartitionedMutexAsync::try_new_with_suggest_cap(
+        let test_mutex_async_42_suggest_num = PartitionedMutexAsync::try_new_with_suggest_num(
             init_42,
             13,
             build_fixed_seed_ahasher_builder(),
@@ -298,15 +298,15 @@ mod tests {
 
         assert_eq!(
             test_rwlock_42_bit_len.partition_mask,
-            test_rwlock_42_suggest_cap.partition_mask
+            test_rwlock_42_suggest_num.partition_mask
         );
         assert_eq!(
             test_mutex_42_bit_len.partition_mask,
-            test_mutex_42_suggest_cap.partition_mask
+            test_mutex_42_suggest_num.partition_mask
         );
         assert_eq!(
             test_mutex_async_42_bit_len.partition_mask,
-            test_mutex_async_42_suggest_cap.partition_mask
+            test_mutex_async_42_suggest_num.partition_mask
         );
     }
 
